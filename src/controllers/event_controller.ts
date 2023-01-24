@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { Request, Response, NextFunction} from 'express';
+import { Request, Response} from 'express';
 import EventRepository from "../data/event_repository";
 import Event from "../entities/event";
 import EventService from "../services/event_service";
@@ -13,7 +13,7 @@ const repository = new EventRepository(new PrismaClient({
 }));
 const service = new EventService(repository);
 
-const getEvents = async (req: Request, res: Response, next: NextFunction) => {
+const getEvents = async (req: Request, res: Response) => {
 
 
     let events = await service.fetchAllEvents();
@@ -22,7 +22,7 @@ const getEvents = async (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const addEvent = async (req: Request, res: Response, next: NextFunction) => {
+const addEvent = async (req: Request, res: Response) => {
     let event = req.body as Event;
 
     const result: any = await service.createEvent(event);
