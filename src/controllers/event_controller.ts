@@ -20,7 +20,7 @@ const getEvents = async (req: Request, res: Response) => {
     });
 };
 
-const getEventById = async (req:Request, res:Response) => {
+const getEventById = async (req: Request, res: Response) => {
     let event = await service.fetchEventById(req.params.id)
     if (event.hasOwnProperty('error')) {
         return res.status(404).json({
