@@ -24,10 +24,8 @@ const getEvents = async (req: Request, res: Response, next: NextFunction) => {
 
 const addEvent = async (req: Request, res: Response, next: NextFunction) => {
     let event = req.body as Event;
-    console.log(`Event in controller: ${event}`)
 
     const result: any = await service.createEvent(event);
-    console.log(`Result: ${result}`)
     if (result instanceof String) {
         return res.status(400).json({
             body: result

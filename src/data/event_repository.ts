@@ -10,7 +10,6 @@ export default class EventRepository {
     }
 
     public async createEvent(event: Event) {
-        console.log(`Event in repo: ${event}`)
         await this.prisma.$connect();
         const result = await this.prisma.event.create({
             data: {

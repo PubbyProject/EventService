@@ -16,12 +16,7 @@ export default class EventService {
     public async createEvent(event: Event) {
         const startTime = new Date("2023-02-06T12:00:00Z")
         const endTime = new Date("2023-02-06T14:00:00Z")
-        console.log(`startTime var: ${startTime}`)
         event.startTime = startTime;
-        event.endTime = endTime;
-        console.log(`Event in service: ${event}`)
-        event.startTime = startTime;
-        console.log(`event.StartTime: ${event.startTime}`)
         event.endTime = endTime;
         const result = await this.repository.createEvent(event);
         if (result instanceof Error) {
