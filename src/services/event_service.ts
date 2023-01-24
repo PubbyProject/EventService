@@ -8,9 +8,18 @@ export default class EventService {
         this.repository = repository;
     }
 
-    public fetchAllEvents() {
-        const events = this.repository.getAllEvents();
+    public async fetchAllEvents() {
+        const events = await this.repository.getAllEvents();
         return events;
+    }
+
+    public async fetchEventById(eventId: string) {
+        const event = await this.repository.getEventById(eventId);
+        if(event === null) {
+            return { error: 'Event not found.' }
+        }
+
+        return event;
     }
 
     public async createEvent(event: Event) {

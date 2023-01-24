@@ -22,6 +22,19 @@ const getEvents = async (req: Request, res: Response) => {
     });
 };
 
+const getEventById = async (req:Request, res:Response) => {
+    let event = await service.fetchEventById(req.params.id)
+    if (event.hasOwnProperty('error')) {
+        return res.status(404).json({
+            body: 'Event not found.'
+        })
+    };
+
+    return res.status(200).json({
+        body: event
+    });
+};
+
 const addEvent = async (req: Request, res: Response) => {
     let event = req.body as Event;
 
@@ -36,4 +49,4 @@ const addEvent = async (req: Request, res: Response) => {
     });
 };
 
-export default {getEvents, addEvent}
+export default {getEvents, getEventById, addEvent}
