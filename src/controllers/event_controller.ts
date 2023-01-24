@@ -44,7 +44,7 @@ const addEvent = async (req: Request, res: Response) => {
             body: result
         })
     }
-    return res.status(200).json({
+    return res.status(201).json({
         body: "Event has been successfully created!"
     });
 };
