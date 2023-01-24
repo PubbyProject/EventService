@@ -40,8 +40,22 @@ export default class EventService {
         if (foundEvent === null) {
             return { error: "Event not found, please use another ID."}
         }
-        
+
         const result = await this.repository.deleteEvent(eventId);
+        if (result instanceof Error) {
+            return result.message;
+        }
+
+        return result;
+    }
+
+    public async updateEvent(eventId: string, event: Event) {
+        const foundEvent = await this.repository.getEventById(eventId);
+        if (foundEvent === null) {
+            return { error: "Event not found, please use another ID."}
+        }
+
+        const result = await this.repository.updateEvent(eventId, event);
         if (result instanceof Error) {
             return result.message;
         }

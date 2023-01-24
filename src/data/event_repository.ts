@@ -50,7 +50,7 @@ export default class EventRepository {
         });
 
         return result;
-    };
+    }
 
     public async deleteEvent(eventId: string) {
         await this.prisma.$connect();
@@ -66,6 +66,33 @@ export default class EventRepository {
         .catch(async (e) => {
             await this.prisma.$disconnect();
             return Error(e.message)
+        });
+
+        return result;
+    }
+
+    public async updateEvent(eventId: string, event: Event) {
+        await this.prisma.$connect();
+
+        const result = await this.prisma.event.update({
+            where: {
+                id: eventId
+            },
+            data: {
+                name: event.name || undefined,
+                description: event.description || undefined,
+                organizer: event.organizer || undefined,
+                startTime: event.startTime || undefined,
+                endTime: event.endTime || undefined,
+                entryPrice: event.entryPrice || undefined,
+                maxCapacity: event.maxCapacity || undefined
+            }
+        })
+        .then(async () => {
+            this.prisma.$disconnect();
+        })
+        .catch(async (e) => {
+            return Error(e.message);
         });
 
         return result;
