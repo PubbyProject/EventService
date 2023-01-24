@@ -9,6 +9,26 @@ export default class EventRepository {
         this.prisma = prismaClient;
     }
 
+    public async getAllEvents() {
+        await this.prisma.$connect();
+        const events = await this.prisma.event.findMany();
+        this.prisma.$disconnect();
+
+        return events;
+    }
+
+    public async getEventById(eventId: string) {
+        await this.prisma.$connect();
+        const event = await this.prisma.event.findUnique({
+            where: {
+                id: eventId
+            }
+        });
+        this.prisma.$disconnect();
+
+        return event;
+    }
+
     public async createEvent(event: Event) {
         await this.prisma.$connect();
         const result = await this.prisma.event.create({
@@ -32,23 +52,22 @@ export default class EventRepository {
         return result;
     };
 
-    public async getAllEvents() {
+    public async deleteEvent(eventId: string) {
         await this.prisma.$connect();
-        const events = await this.prisma.event.findMany();
-        this.prisma.$disconnect();
 
-        return events;
-    }
-
-    public async getEventById(eventId: string) {
-        await this.prisma.$connect();
-        const event = await this.prisma.event.findUnique({
+        const result = await this.prisma.event.delete({
             where: {
                 id: eventId
             }
+        })
+        .then(async () => {
+            await this.prisma.$disconnect();
+        })
+        .catch(async (e) => {
+            await this.prisma.$disconnect();
+            return Error(e.message)
         });
-        this.prisma.$disconnect();
 
-        return event;
+        return result;
     }
 }

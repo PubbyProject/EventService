@@ -34,4 +34,13 @@ export default class EventService {
 
         return result;
     }
+
+    public async deleteEvent(eventId: string) {
+        const result = await this.repository.deleteEvent(eventId);
+        if (result instanceof Error) {
+            return result.message;
+        }
+
+        return result;
+    }
 }

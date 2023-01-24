@@ -49,4 +49,23 @@ const addEvent = async (req: Request, res: Response) => {
     });
 };
 
-export default {getEvents, getEventById, addEvent}
+const deleteEvent = async(req: Request, res: Response) => {
+    if (req.params.id === '') {
+        return res.status(400).json({
+            body: "Please give an ID of the event you want to delete."
+        })
+    }
+
+    const result: any = await service.deleteEvent(req.params.id)
+    if (result instanceof String) {
+        return res.status(500).json({
+            body: result
+        })
+    }
+
+    return res.status(200).json({
+        body: "Event successfully deleted."
+    })
+}
+
+export default {getEvents, getEventById, addEvent, deleteEvent}
