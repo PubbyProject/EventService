@@ -51,7 +51,7 @@ const deleteEvent = async(req: Request, res: Response) => {
     const result: any = await service.deleteEvent(req.params.id)
     if (result.hasOwnProperty('error')) {
         return res.status(404).json({
-            body: "ID was not found. Please try again with another ID."
+            body: "Event with this ID was not found. Please try again with another ID."
         })
     }
 
