@@ -36,6 +36,11 @@ export default class EventService {
     }
 
     public async deleteEvent(eventId: string) {
+        const foundEvent = await this.repository.getEventById(eventId);
+        if (foundEvent === null) {
+            return { error: "Event not found, please use another ID."}
+        }
+        
         const result = await this.repository.deleteEvent(eventId);
         if (result instanceof Error) {
             return result.message;

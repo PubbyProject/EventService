@@ -14,8 +14,6 @@ const repository = new EventRepository(new PrismaClient({
 const service = new EventService(repository);
 
 const getEvents = async (req: Request, res: Response) => {
-
-
     let events = await service.fetchAllEvents();
     return res.status(200).json({
         body: events
@@ -50,16 +48,10 @@ const addEvent = async (req: Request, res: Response) => {
 };
 
 const deleteEvent = async(req: Request, res: Response) => {
-    if (req.params.id === '') {
-        return res.status(400).json({
-            body: "Please give an ID of the event you want to delete."
-        })
-    }
-
     const result: any = await service.deleteEvent(req.params.id)
-    if (result instanceof String) {
-        return res.status(500).json({
-            body: result
+    if (result.hasOwnProperty('error')) {
+        return res.status(404).json({
+            body: "ID was not found. Please try again with another ID."
         })
     }
 
