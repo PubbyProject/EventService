@@ -1,4 +1,4 @@
-interface Event {
+interface EventInfo {
     id: string,
     name: string,
     description: string,
@@ -9,4 +9,4 @@ interface Event {
     maxCapacity: number
 }
 
-export default Event;
+export default EventInfo;

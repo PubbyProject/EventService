@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client"
-import Event from "../entities/event";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import EventInfo from "../entities/models/event";
 
 export default class EventRepository {
 
@@ -11,7 +12,7 @@ export default class EventRepository {
 
     public async getAllEvents() {
         await this.prisma.$connect();
-        const events = await this.prisma.event.findMany();
+        const events = await this.prisma.event.findMany() as EventInfo[];
         this.prisma.$disconnect();
 
         return events;
@@ -23,13 +24,13 @@ export default class EventRepository {
             where: {
                 id: eventId
             }
-        });
+        }) as EventInfo;
         this.prisma.$disconnect();
 
         return event;
     }
 
-    public async createEvent(event: Event) {
+    public async createEvent(event: EventInfo) {
         await this.prisma.$connect();
         const result = await this.prisma.event.create({
             data: {
@@ -44,9 +45,10 @@ export default class EventRepository {
         })
         .then(async () => {
             await this.prisma.$disconnect();
-        }).catch(async (e) => {
+            return event;
+        }).catch(async (e: Error) => {
             await this.prisma.$disconnect()
-            return Error(e.message)
+            return new Error(e.message);
         });
 
         return result;
@@ -62,16 +64,17 @@ export default class EventRepository {
         })
         .then(async () => {
             await this.prisma.$disconnect();
+            return eventId;
         })
-        .catch(async (e) => {
+        .catch(async (e: Error) => {
             await this.prisma.$disconnect();
-            return Error(e.message)
+            return new Error(e.message);
         });
 
         return result;
     }
 
-    public async updateEvent(eventId: string, event: Event) {
+    public async updateEvent(eventId: string, event: EventInfo) {
         await this.prisma.$connect();
 
         const result = await this.prisma.event.update({
@@ -90,9 +93,10 @@ export default class EventRepository {
         })
         .then(async () => {
             this.prisma.$disconnect();
+            return event;
         })
-        .catch(async (e) => {
-            return Error(e.message);
+        .catch(async (e: Error) => {
+            return new Error(e.message);
         });
 
         return result;

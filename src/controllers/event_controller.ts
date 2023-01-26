@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response} from 'express';
 import EventRepository from "../data/event_repository";
-import Event from "../entities/event";
+import EventInfo from "../entities/models/event";
 import EventService from "../services/event_service";
+import ErrorResponse from '../entities/errors/error_response';
 
 const repository = new EventRepository(new PrismaClient({
     datasources: {
@@ -22,9 +23,9 @@ const getEvents = async (req: Request, res: Response) => {
 
 const getEventById = async (req: Request, res: Response) => {
     let event = await service.fetchEventById(req.params.id)
-    if (event.hasOwnProperty('error')) {
+    if (event instanceof ErrorResponse) {
         return res.status(404).json({
-            body: 'Event not found.'
+            body: event.getError()
         })
     };
 
@@ -34,12 +35,12 @@ const getEventById = async (req: Request, res: Response) => {
 };
 
 const addEvent = async (req: Request, res: Response) => {
-    let event = req.body as Event;
+    let event = req.body as EventInfo;
 
-    const result: any = await service.createEvent(event);
-    if (result instanceof String) {
+    const result = await service.createEvent(event);
+    if (result instanceof ErrorResponse) {
         return res.status(400).json({
-            body: result
+            body: result.getError()
         })
     }
     return res.status(201).json({
@@ -48,10 +49,10 @@ const addEvent = async (req: Request, res: Response) => {
 };
 
 const deleteEvent = async(req: Request, res: Response) => {
-    const result: any = await service.deleteEvent(req.params.id)
-    if (result.hasOwnProperty('error')) {
+    const result = await service.deleteEvent(req.params.id)
+    if (result !instanceof String) {
         return res.status(404).json({
-            body: "Event with this ID was not found. Please try again with another ID."
+            body: result as ErrorResponse
         })
     }
 
@@ -61,16 +62,16 @@ const deleteEvent = async(req: Request, res: Response) => {
 };
 
 const updateEvent = async(req: Request, res: Response) => {
-    let event = req.body as Event;
-    const result: any = await service.updateEvent(req.params.id, event)
-    if (result instanceof String) {
+    let event = req.body as EventInfo;
+    const result = await service.updateEvent(req.params.id, event)
+    if (result instanceof ErrorResponse) {
         return res.status(400).json({
-            body: result
+            body: result.getError()
         })
     }
 
     return res.status(200).json({
-        body: event
+        body: result
     });
 }
 
