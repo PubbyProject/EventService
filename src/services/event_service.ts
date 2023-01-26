@@ -21,7 +21,7 @@ export default class EventService {
         });
 
         if(event === null) {
-            return new ErrorResponse('Event not found');//{ error: 'Event not found.' } as ErrorResponse;
+            return new ErrorResponse('Event not found');
         }
 
         return event;
@@ -38,7 +38,7 @@ export default class EventService {
         }
         const result = await this.repository.createEvent(event);
         if (result instanceof Error) {
-            return new ErrorResponse(result.message);//{ error: result.message } as ErrorResponse;
+            return new ErrorResponse(result.message);
         }
 
         return result;
@@ -52,7 +52,7 @@ export default class EventService {
 
         const result = await this.repository.deleteEvent(eventId);
         if (result instanceof Error) {
-            return new ErrorResponse(result.message);//{ error: result.message } as ErrorResponse;
+            return new ErrorResponse(result.message);
         }
 
         return foundEvent;
@@ -66,7 +66,7 @@ export default class EventService {
 
         const result = await this.repository.updateEvent(eventId, event);
         if (result instanceof Error) {
-            return new ErrorResponse(result.message);//{ error: result.message } as ErrorResponse;
+            return new ErrorResponse(result.message);
         }
 
         return result;

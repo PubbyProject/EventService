@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client"
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import EventInfo from "../entities/models/event";
 
 export default class EventRepository {
