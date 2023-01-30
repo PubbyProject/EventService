@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: events-api
+  labels:
+    app: events-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: events-api
+  template:
+    metadata:
+      labels:
+        app: events-api
+    spec:
+      containers:
+        - name: events-api
+          image: localhost:3333/events:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 3333
+          envFrom:
+          - secretRef:
+              name: api-secrets
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi
