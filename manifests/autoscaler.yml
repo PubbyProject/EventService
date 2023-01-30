@@ -9,7 +9,7 @@ spec:
     name: events-api
   minReplicas: 1
   maxReplicas: 4
-  targetCPUUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 90
 status:
   currentCPUUtilizationPercentage: 0
   currentReplicas: 1
