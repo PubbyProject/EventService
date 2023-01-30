@@ -17,6 +17,16 @@ export default class EventRepository {
         return events;
     }
 
+    public async getPaginatedEvents(offset: number, limit: number) {
+        await this.prisma.$connect();
+        const events = await this.prisma.event.findMany({
+            skip: offset,
+            take: limit
+        }) as EventInfo[];
+        await this.prisma.$disconnect();
+        return events;
+    }
+
     public async getEventById(eventId: string) {
         await this.prisma.$connect();
         const event = await this.prisma.event.findUnique({

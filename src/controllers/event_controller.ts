@@ -19,7 +19,7 @@ const getEvents = async (req: Request, res: Response) => {
     return res.status(200).json({
         body: events
     });
-};
+    };
 
 const getEventById = async (req: Request, res: Response) => {
     let event = await service.fetchEventById(req.params.id)
@@ -32,6 +32,34 @@ const getEventById = async (req: Request, res: Response) => {
     return res.status(200).json({
         body: event
     });
+};
+
+const getPaginatedEvents = async (req: Request, res: Response) => {
+    const params = req.query;
+    if (params.offset === '' || params.limit === '') {
+        return res.status(400).json({
+            body: new ErrorResponse('Offset and/or limit are empty. Please try again.')
+        })
+    }
+
+    const offset = Number(params.offset);
+    const limit = Number(params.limit);
+    if (isNaN(offset) || isNaN(limit)) {
+        return res.status(400).json({
+            body: new ErrorResponse('Offset and/or limit are not valid numbers. Please try again.')
+        })
+    }
+
+    const events = await service.fetchPaginatedEvents(offset, limit);
+    if (events instanceof ErrorResponse) {
+        return res.status(500).json({
+            body: events
+        })
+    }
+
+    return res.status(200).json({
+        body: events
+    })
 };
 
 const addEvent = async (req: Request, res: Response) => {
@@ -75,4 +103,4 @@ const updateEvent = async(req: Request, res: Response) => {
     });
 }
 
-export default {getEvents, getEventById, addEvent, deleteEvent, updateEvent}
+export default {getEvents, getEventById, getPaginatedEvents, addEvent, deleteEvent, updateEvent}
