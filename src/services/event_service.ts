@@ -27,6 +27,14 @@ export default class EventService {
         return event;
     }
 
+    public async fetchPaginatedEvents(offset: number, limit: number) {
+        const events = await this.repository.getPaginatedEvents(offset, limit)
+        .catch(async (e: PrismaClientKnownRequestError) => {
+            return new ErrorResponse('Something went wrong. Please try again.')
+        });
+        return events;
+    }
+
     public async createEvent(event: EventInfo) {
         const startTime = new Date("2023-02-06T12:00:00Z")
         const endTime = new Date("2023-02-06T14:00:00Z")

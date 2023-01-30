@@ -15,6 +15,21 @@ const repository = new EventRepository(new PrismaClient({
 const service = new EventService(repository);
 
 const getEvents = async (req: Request, res: Response) => {
+    const params = req.params;
+    if (params.offset !== '' || params.limit !== '') {
+        const offset = Number(params.offset);
+        const limit = Number(params.limit)
+        if (isNaN(offset) || isNaN(limit)) {
+            return res.status(400).json({
+                body: new ErrorResponse('One of your parameters is not a number. Please try again.').getError()
+            });
+        }
+        let eventsPaginated = await service.fetchPaginatedEvents(Number(params.offset), Number(params.limit))
+        return res.status(200).json({
+            body: eventsPaginated
+        });
+    }
+
     let events = await service.fetchAllEvents();
     return res.status(200).json({
         body: events
