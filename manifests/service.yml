@@ -8,5 +8,6 @@ spec:
     - protocol: TCP
       port: 3333
       targetPort: 3333
+      nodePort: 30036
   selector:
     app: events-api
