@@ -36,14 +36,13 @@ export default class EventService {
     }
 
     public async createEvent(event: EventInfo) {
-        const startTime = new Date("2023-02-06T12:00:00Z")
-        const endTime = new Date("2023-02-06T14:00:00Z")
-        event.startTime = startTime;
-        event.endTime = endTime;
-        const hasEmptyProperties = !Object.values(event).every(o => o === null || o === '');
-        if (hasEmptyProperties) {
-            return new ErrorResponse('This event has one or more empty fields. Please fill in all fields.')
-        }
+        const hasEmptyProperties = Object.entries(event)
+        .filter(([key, value]) => key !== 'id' && (value === null || value === ''))
+        .length > 0;
+      
+      if (hasEmptyProperties) {
+        return new ErrorResponse('This event has one or more empty fields. Please fill in all fields.');
+      }
         const result = await this.repository.createEvent(event);
         if (result instanceof Error) {
             return new ErrorResponse(result.message);
