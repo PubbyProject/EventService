@@ -34,6 +34,22 @@ const getEventById = async (req: Request, res: Response) => {
     });
 };
 
+const getEventsByOrganizerId = async(req: Request, res: Response) => {
+    const organizerId = req.params.organizerId;
+    const events = await service.fetchEventsByOrganizerId(organizerId);
+    if (events instanceof ErrorResponse) {
+        return res.status(404).json({
+            body: events.getError()
+        });
+    }
+
+    return res.status(200).json({
+        body: events
+    });
+
+
+}
+
 const getPaginatedEvents = async (req: Request, res: Response) => {
     const params = req.query;
     if (params.offset === '' || params.limit === '') {
@@ -103,4 +119,4 @@ const updateEvent = async(req: Request, res: Response) => {
     });
 }
 
-export default {getEvents, getEventById, getPaginatedEvents, addEvent, deleteEvent, updateEvent}
+export default {getEvents, getEventById, getEventsByOrganizerId, getPaginatedEvents, addEvent, deleteEvent, updateEvent}
