@@ -27,6 +27,15 @@ export default class EventService {
         return event;
     }
 
+    public async fetchEventsByOrganizerId(organizerId: string) {
+        const events = await this.repository.getEventsByOrganizerId(organizerId);
+        if (events.length === 0) {
+            return new ErrorResponse('No events found for this organizer');
+        }
+
+        return events;
+    }
+
     public async fetchPaginatedEvents(offset: number, limit: number) {
         const events = await this.repository.getPaginatedEvents(offset, limit)
         .catch(async (e: PrismaClientKnownRequestError) => {

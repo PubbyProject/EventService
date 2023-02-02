@@ -39,6 +39,18 @@ export default class EventRepository {
         return event;
     }
 
+    public async getEventsByOrganizerId(organizerId: string) {
+        await this.prisma.$connect();
+        const events = await this.prisma.event.findMany({
+            where: {
+                organizer: organizerId
+            }
+        }) as EventInfo[];
+        this.prisma.$disconnect();
+
+        return events;
+    }
+
     public async createEvent(event: EventInfo) {
         await this.prisma.$connect();
         const result = await this.prisma.event.create({
