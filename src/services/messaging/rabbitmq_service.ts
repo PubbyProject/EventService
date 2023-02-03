@@ -40,10 +40,22 @@ export default class RabbitMQService {
     async (message) => {
         let content = message.body as RequestMessage;
         const events = await this.eventService.fetchEventsByOrganizerId(content.organizerId);
+        this.ProduceMessage(connection, events);
     });
 
     consumer.on('error', (err) => {
         console.log('consumer error', err)
       })
+    }
+
+    public async ProduceMessage(connection: Connection, message: any) {
+      const producer = connection.createPublisher({
+        confirm: true,
+        maxAttempts: 2,
+        exchanges: [{exchange: 'organizer-events-exchange', type: 'topic', autoDelete: true, durable: true}]
+      });
+
+      await producer.publish({exchange: 'organizer-events-exchange', routingKey: 'events.result'}, message);
+      await producer.close();
     }
   }
