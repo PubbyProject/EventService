@@ -57,9 +57,8 @@ export default class RabbitMQService {
         this.ProduceMessage(connection, events);
         processedMessagesCount++;
         console.log(`Processed: ${processedMessagesCount}`)
+        incomingMessagesCount = 0;
       }
-
-      await consumer.close();
     });
 
     consumer.on('error', (err) => {

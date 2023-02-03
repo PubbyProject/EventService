@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: events-api
-          image: localhost:3333/events:latest
+          image: localhost:3333/events_api:latest
           imagePullPolicy: Never
           ports:
           - containerPort: 3333
