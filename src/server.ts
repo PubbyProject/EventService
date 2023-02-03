@@ -2,8 +2,21 @@ import http from 'http';
 import express, { Express } from 'express';
 import morgan from 'morgan';
 import routes from './routes/event_routes';
+import { PrismaClient } from '@prisma/client';
+import EventRepository from './data/event_repository';
+import EventService from './services/event_service';
+import RabbitMQService from './services/messaging/rabbitmq_service';
 
 const router: Express = express();
+
+const repository = new EventRepository(new PrismaClient({
+    datasources: {
+        db: {
+            url: process.env.DATABASE_URL
+        }
+    }
+}));
+const service = new EventService(repository);
 
 /** Logging */
 router.use(morgan('dev'));
@@ -43,3 +56,7 @@ router.use((req, res, next) => {
 const httpServer = http.createServer(router);
 const PORT: any = process.env.PORT ?? 6060;
 httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+
+const rabbit = new RabbitMQService(String(process.env.RABBITMQ_URL), 'fetch-organizer-events-request-queue', service);
+const conn = rabbit.CreateConnection();
+rabbit.ConsumeMessage(conn);
